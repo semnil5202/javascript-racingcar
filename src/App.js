@@ -1,9 +1,10 @@
-const RacingGame = require('./controller/RacingGame');
+const Controller = require('./controller/Controller');
 
 class App {
   start() {
-    new RacingGame().play();
+    new Controller().play();
   }
 }
 
-new App().start();
+const app = new App();
+app.start();
