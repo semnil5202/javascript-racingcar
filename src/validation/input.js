@@ -1,5 +1,4 @@
 const OutputView = require('../view/OutputView');
-const { GAME, ERROR } = require('../constant/constants');
 
 const handleError = (errorMessage) => {
   try {
@@ -11,54 +10,28 @@ const handleError = (errorMessage) => {
 };
 
 const checkCarNameLength = (carNames) => {
-  if (
-    !carNames.every(
-      (carName) => carName.length >= GAME.CAR_NAME.min && carName.length <= GAME.CAR_NAME.max,
-    )
-  ) {
-    return handleError(ERROR.carNameLength);
+  if (!carNames.every((carName) => carName.length >= 1 && carName.length <= 5)) {
+    return handleError('자동차 이름은 1~5글자 사이여야 합니다.');
   }
-  return true;
 };
 
 const checkDuplicatedCarName = (carNames) => {
   if (carNames.length !== new Set(carNames).size) {
-    return handleError(ERROR.duplicatedCarName);
+    return handleError('자동차 이름은 중복될 수 없습니다.');
   }
-  return true;
 };
 
 const checkBlankInCarName = (carNames) => {
-  if (carNames.some((carName) => carName.includes(GAME.blank))) {
-    return handleError(ERROR.blankInCarName);
+  if (carNames.some((carName) => carName.includes(' '))) {
+    return handleError('자동차 이름은 공백이 포함될 수 없습니다.');
   }
-  return true;
 };
 
 const validateCarNames = (carNames) => {
-  return (
-    checkCarNameLength(carNames) &&
-    checkDuplicatedCarName(carNames) &&
-    checkBlankInCarName(carNames)
-  );
-};
-
-const checkIsBetweenValidRange = (winningDistance) => {
-  if (!(GAME.DISTANCE.min <= winningDistance && winningDistance < GAME.DISTANCE.max)) {
-    return handleError(ERROR.invalidWinningDistanceRange);
-  }
+  checkCarNameLength(carNames);
+  checkDuplicatedCarName(carNames);
+  checkBlankInCarName(carNames);
   return true;
 };
 
-const checkIsInt = (winningDistance) => {
-  if (Number.isNaN(winningDistance)) {
-    return handleError(ERROR.invalidWinningDistanceType);
-  }
-  return true;
-};
-
-const validateWinningDistance = (winningDistance) => {
-  return checkIsInt(winningDistance) && checkIsBetweenValidRange(winningDistance);
-};
-
-module.exports = { validateCarNames, validateWinningDistance };
+module.exports = { validateCarNames };
