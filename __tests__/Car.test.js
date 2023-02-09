@@ -1,41 +1,28 @@
 const Car = require('../src/model/Car');
-const common = require('../src/utils/common');
-const { GAME } = require('../src/constant/constants');
+const RandomGenerator = require('../src/model/RandomGenerator');
+const { GAME } = require('../src/utils/constants');
 
 const mockRandoms = (numbers) => {
-  common.generateRandomNumberInRange = jest.fn();
+  RandomGenerator.getBetween = jest.fn();
   numbers.reduce((acc, cur) => {
     return acc.mockReturnValueOnce(cur);
-  }, common.generateRandomNumberInRange);
+  }, RandomGenerator.getBetween);
 };
 
 describe('Car 클래스', () => {
-  test(`자동차는 ${GAME.MOVE_CONDITION.min}와 ${GAME.MOVE_CONDITION.max - 1} 사이에서 무작위 값이 ${
-    GAME.MOVE_CONDITION.satisfaction
-  } 이상일 경우 전진한다.`, () => {
+  it(`자동차가 전진하는 조건은 ${GAME.MOVE_CONDITION.min}에서 ${
+    GAME.MOVE_CONDITION.max - 1
+  } 사이에서 무작위 값을 구한 후 무작위 값이 4 이상일 경우이다.`, () => {
     const car = new Car('name');
-    const randomNumbers = [4, 5];
-
-    console.log('hh' + mockRandoms);
-    mockRandoms(randomNumbers);
-    randomNumbers.forEach(() => {
-      car.move();
-    });
-
-    expect(car.getDistance()).toBe(2);
-  });
-
-  test(`자동차는 ${GAME.MOVE_CONDITION.min}와 ${GAME.MOVE_CONDITION.max - 1} 사이에서 무작위 값이 ${
-    GAME.MOVE_CONDITION.satisfaction
-  } 미만일 경우 멈춘다.`, () => {
-    const car = new Car('name');
-    const randomNumbers = [3, 2];
+    const randomNumbers = [0, 1, 3, 5, 3, 2, 7, 9, 7];
+    const distanceResult = [];
 
     mockRandoms(randomNumbers);
     randomNumbers.forEach(() => {
       car.move();
+      distanceResult.push(car.getDistance());
     });
 
-    expect(car.getDistance()).toBe(0);
+    expect(distanceResult).toEqual([0, 0, 0, 1, 1, 1, 2, 3, 4]);
   });
 });
