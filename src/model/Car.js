@@ -1,5 +1,6 @@
-const { GAME } = require('../utils/constants');
-const { randomGenerator } = require('../utils/common');
+const { GAME } = require('../constant/constants');
+const common = require('../utils/common');
+
 class Car {
   #name;
   #distance;
@@ -10,18 +11,11 @@ class Car {
   }
 
   move() {
-    const randomNumber = randomGenerator.getBetween(
+    const randomNumber = common.generateRandomNumberInRange(
       GAME.MOVE_CONDITION.min,
       GAME.MOVE_CONDITION.max,
     );
-    if (randomNumber < GAME.MOVE_CONDITION.mid) {
-      return;
-    }
-    this.#distance += 1;
-  }
-
-  isFinish(winningDistance) {
-    return this.#distance >= winningDistance;
+    if (randomNumber >= GAME.MOVE_CONDITION.satisfaction) this.#distance += 1;
   }
 
   getName() {
